@@ -1,0 +1,33 @@
+<div class="recipe" *ngIf="recipe">
+    <h2 class="recipe-title">{{recipe.title | uppercase}}</h2>
+    <div class="recipe-details">
+        <div class="col-xs-12 col-sm-4 thumbnail"><img src="{{recipe.image}}" /></div>
+        <div class="col-xs-12 col-sm-8">
+            <ul class="fields">
+                <li class="field-data">
+                    <span class="label">Summary: </span><span [innerHTML]="recipe.summary"></span>
+                </li>
+                <li class="field-data">
+                    <span class="label">Ingredients: </span>
+                    <span>
+                        <ul>
+                            <li *ngFor="let ingredient of recipe.extendedIngredients">
+                                {{ ingredient.originalString }}
+                            </li>
+                        </ul>
+                    </span>
+                </li>
+                <li class="field-data">
+                    <span class="label">Instructions: </span><span [innerHTML]="recipe.instructions"></span>
+                </li>
+                <li class="field-data">
+                    <a href="{{ recipe.sourceUrl }}" target="_blank">
+                        <span *ngIf="recipe.license">{{ recipe.license }} </span>
+                        <span *ngIf="recipe.creditsText">{{ recipe.creditsText }} </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>    
+</div>
+<button class="btn btn-outline-dark back-button" (click)="goBack()">Go back</button>
