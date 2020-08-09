@@ -1,0 +1,30 @@
+<div class="row">
+    <mat-spinner class="spinner" *ngIf="recipes.length === 0"></mat-spinner>
+    <div class="d-none d-sm-block">
+        <mat-card class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" *ngFor="let recipe of recipes" style="margin-top:10px;">
+            <a routerLink="/recipe/{{recipe.id}}">
+                <mat-card-content>
+                    <img style="height:100%; width: 100%;" src="{{ recipe.image }}" />
+                </mat-card-content>
+                <mat-card-header>
+                    <mat-card-title>{{recipe.title}}</mat-card-title>
+                </mat-card-header>
+                <mat-card-actions>
+                </mat-card-actions>
+            </a>
+        </mat-card>
+    </div>
+
+    <ngb-carousel class="d-block d-sm-none">
+        <ng-template ngbSlide *ngFor="let recipe of recipes">
+            <a routerLink="/recipe/{{recipe.id}}">  
+                <div>
+                    <img [src]="recipe.image" alt="recipe.title">
+                </div>
+                <div class="carousel-caption">
+                    <h3>{{recipe.title}}</h3>
+                </div>
+            </a>
+        </ng-template>
+    </ngb-carousel>
+</div>
