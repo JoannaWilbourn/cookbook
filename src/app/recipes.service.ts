@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse  } from '@angular/common/http';
-import { map, tap } from "rxjs/operators";
-import {  throwError } from 'rxjs';
-import { retry, catchError } from 'rxjs/operators';
+import { map, retry, catchError } from "rxjs/operators";
+import {  throwError, of, Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecipesService {
-  private REST_API_SERVER = "https://api.spoonacular.com/recipes";
 
+  hits: 0;
+  
   constructor(private httpClient: HttpClient) { }
 
   handleError(error: HttpErrorResponse) {
@@ -27,7 +28,8 @@ export class RecipesService {
   }
   
   public getRandomRecipes(){
-    return this.httpClient.get(this.REST_API_SERVER + '/random?apiKey=d3cab70838f64ff6a97c94e899d1e693&number=6')
+    return this.httpClient.get
+    (`${environment.recipeApiServer}/recipes/random?apiKey=${environment.apiKey}&number=${environment.randomRecipes}`)
     .pipe(
       map(
         result => {
@@ -38,4 +40,40 @@ export class RecipesService {
       catchError(this.handleError)
     );
   }
+
+  public getRecipesSuggestions(value : string) {
+    return this.httpClient.get<Object[]>
+    (`${environment.recipeApiServer}/recipes/autocomplete?apiKey=${environment.apiKey}&number=5&query=${value}`)
+    .pipe(
+      map(
+        result => {
+          let suggestions: string[];
+          suggestions = result.map(x => x['title']);
+          return suggestions;
+        }          
+      ),
+      retry(3),
+      catchError(this.handleError)
+    );
+  }
+
+  public searchRecipes(name: string, page: number){
+    const offset = (page - 1) * 12;
+    return this.httpClient.get
+    (`${environment.recipeApiServer}/recipes/complexSearch?apiKey=${environment.apiKey}&query=${name}&number=12&offset=${offset}`)
+    .pipe(
+      map(
+        result => {
+          this.hits = result['totalResults'];
+          return (result['results']);
+        }          
+      ),
+      retry(3),
+      catchError(this.handleError)
+    );
+  }
+
+  public getHits(){
+    return this.hits;
+  } 
 }

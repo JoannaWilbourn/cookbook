@@ -2,3 +2,25 @@ mat-card-content > * {
     display: inline-block;
     vertical-align: middle;
 }
+
+.simple-search-form {
+    padding: 30px;
+    font-size: 1.25em;
+}
+
+ngb-carousel {
+    background-color: #3f51b5;
+}
+
+.carousel-indicators {
+    background-color: #3f51b5;
+    bottom: -5px;
+}
+
+.carousel-caption {
+    position: relative;
+    right: 0;
+    left: 0;
+    bottom: 5px;
+    background-color: #3f51b5;
+}

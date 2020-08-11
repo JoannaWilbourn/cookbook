@@ -1,15 +1,51 @@
-<div style="padding: 13px;">
-    <mat-spinner class="spinner" *ngIf="recipes.length === 0"></mat-spinner>
+<div class="content">
+    <form>
+        <mat-form-field class="simple-search-form col-xs-12 col-sm-8 col-md-6 col-lg-4">
+            <input #recipeSearchBox
+            type="text"
+            placeholder="Recipe name"
+            aria-label="Recipe search"
+            (keyup.enter)="searchRecipes(recipeSearchBox.value)"
+            matInput
+            [formControl]="recipeSearch"
+            [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of (suggestions | async)" [value]="option"
+                (click)="searchRecipes(recipeSearchBox.value)">
+                {{option}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </form>
 
-    <mat-card *ngFor="let recipe of recipes" style="margin-top:10px;">
-        <mat-card-header>
-            <mat-card-title>{{recipe.title}}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <img class="col-sm-3" style="height:100%; width: 100%;" src="{{ recipe.image }}" />
-            <span class="col-sm-9"  [innerHTML]="recipe.summary"></span>        
-        </mat-card-content>
-        <mat-card-actions>
-        </mat-card-actions>
-    </mat-card>
+    <h2>Recipe spotlight</h2>
+    <mat-spinner class="spinner" *ngIf="recipes.length === 0"></mat-spinner>
+    <div class="d-none d-sm-block">
+        <mat-card *ngFor="let recipe of recipes" style="margin-top:10px;">
+            <a routerLink="/recipe/{{recipe.id}}">
+                <mat-card-header>
+                    <mat-card-title>{{recipe.title}}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <img class="col-sm-3" style="height:100%; width: 100%;" src="{{ recipe.image }}" />
+                    <span class="col-sm-9"  [innerHTML]="recipe.summary"></span>        
+                </mat-card-content>
+                <mat-card-actions>
+                </mat-card-actions>
+            </a>
+        </mat-card>
+    </div>
+
+    <ngb-carousel class="d-block d-sm-none">
+        <ng-template ngbSlide *ngFor="let recipe of recipes">
+            <a routerLink="/recipe/{{recipe.id}}">  
+                <div>
+                    <img [src]="recipe.image" alt="recipe.title">
+                </div>
+                <div class="carousel-caption">
+                    <h3>{{recipe.title}}</h3>
+                </div>
+            </a>
+        </ng-template>
+    </ngb-carousel>
 </div>

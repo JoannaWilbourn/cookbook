@@ -1,30 +1,39 @@
-<div class="row">
-    <mat-spinner class="spinner" *ngIf="recipes.length === 0"></mat-spinner>
-    <div class="d-none d-sm-block">
-        <mat-card class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" *ngFor="let recipe of recipes" style="margin-top:10px;">
-            <a routerLink="/recipe/{{recipe.id}}">
-                <mat-card-content>
-                    <img style="height:100%; width: 100%;" src="{{ recipe.image }}" />
-                </mat-card-content>
-                <mat-card-header>
-                    <mat-card-title>{{recipe.title}}</mat-card-title>
-                </mat-card-header>
-                <mat-card-actions>
-                </mat-card-actions>
-            </a>
-        </mat-card>
+<div class="content">
+    <mat-spinner class="spinner" *ngIf="recipes === 0"></mat-spinner>
+    <div *ngIf="hits === 0">
+        <h1>No results</h1>
+        <p>No results containing all your search terms were found.</p>
+        <p>Your search - {{recipeName}} - did not match any recipes.</p>
+        <p>Suggestions:</p>
+        <ul>
+            <li>Make sure that all words are spelled correctly.</li>
+            <li>Try different keywords.</li>
+            <li>Try more general keywords.</li>
+        </ul><br/>
     </div>
-
-    <ngb-carousel class="d-block d-sm-none">
-        <ng-template ngbSlide *ngFor="let recipe of recipes">
-            <a routerLink="/recipe/{{recipe.id}}">  
-                <div>
-                    <img [src]="recipe.image" alt="recipe.title">
-                </div>
-                <div class="carousel-caption">
-                    <h3>{{recipe.title}}</h3>
-                </div>
-            </a>
-        </ng-template>
-    </ngb-carousel>
+    <div *ngIf="hits > 0">
+        <h1>{{ hits }} results found for keyword: {{recipeName}}</h1>    
+        <div fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="center stretch" class="d--xs-none">        
+            <div fxFlex.xl="16%" fxFlex.lg="25%" fxFlex.md="33%" fxFlex.sm="50%" fxFlex.xs="100%" 
+                *ngFor="let recipe of recipes">
+                <mat-card>
+                    <a routerLink="/recipe/{{recipe.id}}">
+                        <mat-card-content>
+                            <img style="height:100%; width: 100%;" src="{{ recipe.image }}" />
+                        </mat-card-content>
+                        <mat-card-header>
+                            <mat-card-title>{{recipe.title}}</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-actions>
+                        </mat-card-actions>
+                    </a>
+                </mat-card>
+            </div>
+        </div>
+        <mat-paginator [length]="hits"
+                [pageSize]="12"
+                [showFirstLastButtons]="true"
+                (page)="pageEvent = changePage($event)">
+        </mat-paginator>
+    </div>
 </div>
